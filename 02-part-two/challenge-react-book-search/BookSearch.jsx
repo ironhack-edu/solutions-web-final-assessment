@@ -45,7 +45,7 @@ class BookSearch extends React.Component {
               value={this.state["author"]}
               className="author"
               name="author"
-              onChange={(e) => this.handleChange(e, "author")}
+              onChange={this.handleChange}
             />
           </label>
 
@@ -56,7 +56,7 @@ class BookSearch extends React.Component {
               value={this.state["title"]}
               className="title"
               name="title"
-              onChange={(e) => this.handleChange(e, "title")}
+              onChange={this.handleChange}
             />
           </label>
 
@@ -78,7 +78,7 @@ class BookSearch extends React.Component {
               value={this.state["language"]}
               className="language"
               name="language"
-              onChange={(e) => this.handleChange(e, "language")}
+              onChange={this.handleChange}
             />
           </label>
 
@@ -89,7 +89,7 @@ class BookSearch extends React.Component {
               value={this.state["year"]}
               className="year"
               name="year"
-              onChange={(e) => this.handleChange(e, "year")}
+              onChange={this.handleChange}
             />
           </label>
         </div>

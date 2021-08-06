@@ -9,105 +9,115 @@ class BookSearch extends React.Component {
       country: "",
       language: "",
       year: "",
+      books: [],
+      filteredBooks: []
     };
   }
-
-  matches = (book) => {
-    const inputs = this.state;
-    const bookEntries = Object.entries(book);
-
-    const matchedBooks = bookEntries.every(([key, value]) => {
-      const inputIsEmpty = !inputs[key];
-      if (inputIsEmpty) return true;
-      else {
-        const valueLowercased = value.toString().toLowerCase();
-        const inputLowercased = inputs[key].trim().toLowerCase();
-        return valueLowercased.includes(inputLowercased);
-      }
-    });
-
-    return matchedBooks;
-  };
-
+    
+    
   handleChange = (e) => {
     const { value, name } = e.target;
-    this.setState((state) => ({ [e.target.name]: value }));
+    this.setState((state) => ({ [e.target.name]: value }), () => {
+        this.filterBooks();
+    });
+    
   };
-
+    
+  filterBooks = () => {
+    const filteredBooks = this.state.books.filter((eachBook) => {
+        const bookEntries = Object.entries(eachBook);
+        
+        const isMatch = bookEntries.every((element) => {
+            const [key, value] = element;
+            const input = this.state[key];
+            const inputIsEmpty = input === "" || input === undefined;
+            
+            if (inputIsEmpty) return true;
+            else {
+                const valueStr = value.toString().toLowerCase();
+                const inputStr = input.trim().toLowerCase();
+                return valueStr.includes(inputStr);
+            }
+            
+        })
+        
+        return isMatch;
+    })
+    
+    this.setState({ filteredBooks });
+  }
+    
+    
+  componentDidMount() {
+    const { books } = this.props;
+    this.setState({  books: books , filteredBooks: books })
+  }
+    
+    
   render() {
+    const { author, title, country, language, year, filteredBooks } = this.state;
     return (
-      <div className="book-search-container">
-        <div className="search-box">
-          <label>
-            Author
+      <>
+        <div>
+          <label> Author
             <input
-              autoComplete="off"
-              value={this.state["author"]}
+              value={author}
               className="author"
               name="author"
-              onChange={(e) => this.handleChange(e, "author")}
+              onChange={this.handleChange}
             />
           </label>
 
           <label>
             Title
             <input
-              autoComplete="off"
-              value={this.state["title"]}
+              value={title}
               className="title"
               name="title"
-              onChange={(e) => this.handleChange(e, "title")}
+              onChange={this.handleChange}
             />
           </label>
 
-          <label>
-            Country
+          <label> Country
             <input
-              autoComplete="off"
-              value={this.state["country"]}
+              value={country}
               className="country"
               name="country"
               onChange={this.handleChange}
             />
           </label>
 
-          <label>
-            Language
+          <label> Language
             <input
-              autoComplete="off"
-              value={this.state["language"]}
+              value={language}
               className="language"
               name="language"
-              onChange={(e) => this.handleChange(e, "language")}
+              onChange={this.handleChange}
             />
           </label>
 
-          <label>
-            Year
+          <label> Year
             <input
-              autoComplete="off"
-              value={this.state["year"]}
+              value={year}
               className="year"
               name="year"
-              onChange={(e) => this.handleChange(e, "year")}
+              onChange={this.handleChange}
             />
           </label>
         </div>
-        <div className="books">
-          {this.props.books
-            .filter((book) => this.matches(book))
-            .map((book, i) => (
-              <div key={book.title + i} className="book">
-                {Object.entries(book).map(([key, v]) => (
-                  <div key={key} className="book-detail-row">
-                    <span className="book-detail-key">{key}</span>
-                    <span className="book-detail-val">{v}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-        </div>
-      </div>
+            
+        {filteredBooks.map((book) => (
+           <div className="book">
+              <p>author: {book.author}</p>
+              <p>country: {book.country}</p>
+              <p>language: {book.language}</p>
+              <p>pages: {book.pages}</p>
+              <p>title: {book.title}</p>  
+              <p>year: {book.year}</p>                    
+           </div>
+        ))}
+            
+      </>
     );
   }
 }
